@@ -1,42 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.IO;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace ser1
 {
-
     public class User
     {
         
-        private string name;
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-            set
-            {
-                this.name = value;
-            }
-        }
-
-        private string address;
-
-        public string Address
-        {
-            get { return this.address; }
-            set { this.address = value; }
-        }
-
         private static List<bool> UsedCounter = new List<bool>();
         private static object Lock = new object();
-        private int id;
-        public int ID { get { return this.id; } }
+
+        public int ID { get; set; }
 
         private int GetAvailableIndex()
         {
@@ -51,6 +28,27 @@ namespace ser1
             // Nothing available.
             return -1;
         }
+        private string name;
+        public string Name
+        {
+            get
+            {
+                return this.name;
+            }
+            set
+            {
+                this.name = value;
+            }
+        }
+
+        private string address;
+        public string Address
+        {
+            get { return this.address; }
+            set { this.address = value; }
+        }
+
+
 
         public User()
         {
@@ -63,7 +61,7 @@ namespace ser1
                     UsedCounter.Add(true);
                 }
 
-                this.id = nextIndex;
+                this.ID = nextIndex;
 
 
             }
@@ -86,10 +84,10 @@ namespace ser1
 
             try
             {
-                string file = path + ID.ToString() + ".xml";
+                string file = path + "Users.xml";
 
-                //FileStream file = System.IO.File.Create(path);
                 StreamWriter sw = File.CreateText(file);
+                
                 writer.Serialize(sw, this);
                 sw.Close();
             }
